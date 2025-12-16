@@ -175,10 +175,10 @@ int main(){
 
     std::cout << "Enter input string ending with $: ";
     std::getline(std::cin, input);
-    //if (input.back() != '$'){
-    //    std::cout << "Error: Input string does not end with $\n";
-    //    return 0;
-    //}
+    if (input.back() != '$'){
+        std::cout << "Error: Input string does not end with $\n";
+        return 0;
+    }
         
     bool accepted = parser.parse(input);
 
