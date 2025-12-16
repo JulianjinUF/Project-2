@@ -1,5 +1,5 @@
 // CPSC 323 - Project 2
-// LL(1 Predictive Parser
+// LL(1) Predictive Parser
 #include <iostream>
 #include <string>
 #include <vector>
@@ -17,15 +17,15 @@ TableKey makeKey (char nonterminal, char terminal){
     return key;
 }
 
-// This will be the predictive parser class
+// This will be the predictive parser 
 class PredictiveParser{
 public:
-// This one here is the Constructor. Sets up the stack and the parsing tabele
+// This one here is the Constructor. Sets up the stack and the parsing table
     PredictiveParser(){
         parsingStack.push_back('$');
         parsingStack.push_back('E');
 
-        initParsingTable();  // TODO: I will leave this to someone to do take the parsing table from the PDF and the convert the rows and columns into key-value mappings.
+        initParsingTable();  // TODO: I will leave this to someone to take the parsing table from the PDF and convert the rows and columns into key-value mappings.
     }
 
     bool parse(const std::string &input);
