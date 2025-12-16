@@ -72,8 +72,8 @@ void PredictiveParser::initParsingTable(){
     // Q -> +TQ | -TQ | ε
     parsingTable[makeKey('Q', '+')] = "+TQ";
     parsingTable[makeKey('Q', '-')] = "-TQ";
-    parsingTable[makeKey('Q', ')')] = "ε";
-    parsingTable[makeKey('Q', '$')] = "ε";
+    parsingTable[makeKey('Q', ')')] = "e";
+    parsingTable[makeKey('Q', '$')] = "e";
 
     // T -> FR
     parsingTable[makeKey('T', 'a')] = "FR";
@@ -82,10 +82,10 @@ void PredictiveParser::initParsingTable(){
     // R -> *FR | /FR | ε
     parsingTable[makeKey('R', '*')] = "*FR";
     parsingTable[makeKey('R', '/')] = "/FR";
-    parsingTable[makeKey('R', '+')] = "ε";
-    parsingTable[makeKey('R', '-')] = "ε";
-    parsingTable[makeKey('R', ')')] = "ε";
-    parsingTable[makeKey('R', '$')] = "ε";
+    parsingTable[makeKey('R', '+')] = "e";
+    parsingTable[makeKey('R', '-')] = "e";
+    parsingTable[makeKey('R', ')')] = "e";
+    parsingTable[makeKey('R', '$')] = "e";
 
     // F -> (E) | a
     parsingTable[makeKey('F', '(')] = "(E)";
@@ -115,12 +115,56 @@ void PredictiveParser::printStack() const {
 // TODO:: Assume input already ends with $ implements the predictive parsing algorithm using parsing table and calls printStack after each match or rule
 // also the skeleton just delete this message
 bool PredictiveParser::parse(const std::string &input){
-    //This one should be a bit long as you need to call printstack and if the top is a terminal or $ 
-    //pop and avance input else return false
-    // if top is a non-terminal look up productions RHS in parsingtable
-    // if there is no entry at all it should return false, if not pop non-terminal, then push RHS
-    // if both stack top and lookahead are $ it would accept and return true
+    size_t i = 0; // input pointer
 
+    while (!parsingStack.empty()) {
+        char X = parsingStack.back();                   // top of stack
+        char a = (i < input.size() ? input[i] : '\0');  // lookahead
+
+        // if both stack top and lookahead are $ it would accept and return true
+        if (X == '$' && a == '$') {
+            std::cout << "ACCEPT\n";
+            return true;
+        }
+
+        //This one should be a bit long as you need to call printstack and if the top is a terminal or $ 
+        //pop and avance input else return false
+        if (!isNonTerminal(X)) {
+            if (X == a) {
+                std::cout << "MATCH: " << a << "\n";
+                parsingStack.pop_back();
+                i++;
+                printStack();
+            } else {
+                std::cout << "ERROR: expected '" << X << "' but found '" << a << "'\n";
+                return false;
+            }
+        }
+
+        // if top is a non-terminal look up productions RHS in parsingtable
+        // if there is no entry at all it should return false, if not pop non-terminal, then push RHS
+        else {
+            TableKey key = makeKey(X, a);
+            auto it = parsingTable.find(key);
+
+            if (it == parsingTable.end()) {
+                std::cout << "ERROR: no rule for (" << X << ", " << a << ")\n";
+                return false;
+            }
+
+            std::string rhs = it->second;
+            std::cout << "EXPAND: " << X << " -> " << rhs << "\n";
+
+            // pop the nonterminal
+            parsingStack.pop_back();
+
+            // push RHS if it's not epsilon
+            pushRHS(rhs);
+
+            printStack();
+        }
+    }
+    std::cout << "ERROR: Stack emptied before acceptance" << std::endl;
     return false;
 }
 
