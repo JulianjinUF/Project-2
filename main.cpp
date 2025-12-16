@@ -105,7 +105,11 @@ void PredictiveParser::pushRHS(const std::string &rhs){
 // TODO: printStack show current stack contents for tracing
 //below is the skeleton delete this message once you finish 
 void PredictiveParser::printStack() const {
-    
+    std::cout << "STACK: ";
+    for (char c : parsingStack) {
+        std::cout << c << ' ';
+    }
+    std::cout << '\n';
 }
 
 // TODO:: Assume input already ends with $ implements the predictive parsing algorithm using parsing table and calls printStack after each match or rule
