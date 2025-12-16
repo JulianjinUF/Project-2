@@ -63,7 +63,33 @@ private:
 // TODO: Initialize the parsing table based on the table in the pdf
 // this is just the skeleton delete this comment after you finish
 void PredictiveParser::initParsingTable(){
-    
+    parsingTable.clear();
+
+    // E -> TQ
+    parsingTable[makeKey('E', 'a')] = "TQ";
+    parsingTable[makeKey('E', '(')] = "TQ";
+
+    // Q -> +TQ | -TQ | ε
+    parsingTable[makeKey('Q', '+')] = "+TQ";
+    parsingTable[makeKey('Q', '-')] = "-TQ";
+    parsingTable[makeKey('Q', ')')] = "ε";
+    parsingTable[makeKey('Q', '$')] = "ε";
+
+    // T -> FR
+    parsingTable[makeKey('T', 'a')] = "FR";
+    parsingTable[makeKey('T', '(')] = "FR";
+
+    // R -> *FR | /FR | ε
+    parsingTable[makeKey('R', '*')] = "*FR";
+    parsingTable[makeKey('R', '/')] = "/FR";
+    parsingTable[makeKey('R', '+')] = "ε";
+    parsingTable[makeKey('R', '-')] = "ε";
+    parsingTable[makeKey('R', ')')] = "ε";
+    parsingTable[makeKey('R', '$')] = "ε";
+
+    // F -> (E) | a
+    parsingTable[makeKey('F', '(')] = "(E)";
+    parsingTable[makeKey('F', 'a')] = "a";
 }
 
 // This is for the pushRHS where we push a production RHS to the stack
